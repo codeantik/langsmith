@@ -9,6 +9,9 @@ from pydantic import BaseModel, Field
 from langsmith import traceable
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
+import os
+
+os.environ["LANGCHAIN_PROJECT"] = "LangGraph Demo"
 
 # ---------- Setup ----------
 load_dotenv()

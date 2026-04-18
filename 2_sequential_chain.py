@@ -2,6 +2,9 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+import os
+
+os.environ["LANGCHAIN_PROJECT"] = "Sequential LLM App"
 
 load_dotenv()
 
@@ -15,12 +18,21 @@ prompt2 = PromptTemplate(
     input_variables=['text']
 )
 
-model = ChatOpenAI()
+model1 = ChatOpenAI(model='gpt-4o-mini', temperature=0.7)
+
+model2 = ChatOpenAI(model='gpt-4o-mini', temperature=0.5)
+
 
 parser = StrOutputParser()
 
-chain = prompt1 | model | parser | prompt2 | model | parser
+chain = prompt1 | model1 | parser | prompt2 | model2 | parser
 
-result = chain.invoke({'topic': 'Unemployment in India'})
+config = {
+    'run_name': 'sequential chain',
+    'tags': ['sequential_chain', 'demo', 'report_generation', 'summarization'],
+    'metadata': { 'model1': 'gpt-4o-mini', 'model2': 'gpt-4o-mini', 'temperature1': 0.7, 'temperature2': 0.5, 'parser': 'StrOutputParser' }
+}
+
+result = chain.invoke({'topic': 'Unemployment in India'}, config=config)
 
 print(result)
